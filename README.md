@@ -135,3 +135,76 @@ where s.sales_id not in (
     where c.name="RED"
 );
 ```
+### 610. Triangle Judgement  
+Table: Triangle  
+
+| Column Name | Type |
+|-------------|------|
+| x           | int  |
+| y           | int  |
+| z           | int  |
+
+In SQL, (x, y, z) is the primary key column for this table. Each row of this table contains the lengths of three line segments.  
+Report for every three line segments whether they can form a triangle. Return the result table in any order.
+```
+select x, y, z, 
+CASE
+    WHEN (x+y)>z AND (x+z)>y AND (y+z)>x THEN "Yes"
+ELSE "No"
+END AS triangle
+from Triangle;
+```
+### 619. Biggest Single Number
+Table: MyNumbers
+| Column Name | Type |
+|-------------|------|
+| num         | int  |
+
+
+This table may contain duplicates (In other words, there is no primary key for this table in SQL). Each row of this table contains an integer. A single number is a number that appeared only once in the MyNumbers table.
+Find the largest single number. If there is no single number, report null.
+```
+select max(num) as num
+from 
+  (/* сначала отбираем не повторяющиеся числа */
+  select num
+  from MyNumbers
+  group by num
+  having count(num) =1) as n;
+```
+### 620. Not Boring Movies  
+Table: Cinema
+| Column Name    | Type     |
+|----------------|----------|
+| id             | int      |
+| movie          | varchar  |
+| description    | varchar  |
+| rating         | float    |
+
+id is the primary key (column with unique values) for this table. Each row contains information about the name of a movie, its genre, and its rating.
+rating is a 2 decimal places float in the range [0, 10]
+Write a solution to report the movies with an odd-numbered ID and a description that is not "boring".
+Return the result table ordered by rating in descending order.
+```
+select id, movie, description, rating
+from Cinema
+where id%2 != 0 AND description not like '%boring%'
+order by rating DESC;
+```
+### 627. Swap Salary
+Table: Salary
+
+| Column Name | Type     |
+|-------------|----------|
+| id          | int      |
+| name        | varchar  |
+| sex         | ENUM     |
+| salary      | int      |
+
+id is the primary key (column with unique values) for this table. The sex column is ENUM (category) value of type ('m', 'f'). The table contains information about an employee.
+Write a solution to swap all 'f' and 'm' values (i.e., change all 'f' values to 'm' and vice versa) with a single update statement and no intermediate temporary tables.
+Note that you must write a single update statement, do not write any select statement for this problem.
+```
+Update salary
+set sex = if(sex='m', 'f', 'm');
+```
