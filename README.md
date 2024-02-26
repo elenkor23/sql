@@ -225,3 +225,114 @@ from ActorDirector
 group by actor_id, director_id
 having count(timestamp)>=3;
 ```
+### 1068. Product Sales Analysis I  
+Table: Sales
+| Column Name | Type  |
+|-------------|-------|
+| sale_id     | int   |
+| product_id  | int   |
+| year        | int   |
+| quantity    | int   |
+| price       | int   |
+
+(sale_id, year) is the primary key (combination of columns with unique values) of this table. product_id is a foreign key (reference column) to Product table. Each row of this table shows a sale on the product product_id in a certain year. Note that the price is per unit.  
+
+Table: Product
+| Column Name  | Type    |
+|--------------|---------|
+| product_id   | int     |
+| product_name | varchar |  
+
+product_id is the primary key (column with unique values) of this table. Each row of this table indicates the product name of each product.  
+Write a solution to report the product_name, year, and price for each sale_id in the Sales table.
+Return the resulting table in any order.  
+```
+select product_name, year, price
+from Sales s
+join Product p on s.product_id=p.product_id;
+```
+
+### 1075. Project Employees I
+Table: Project
+| Column Name | Type    |
+|-------------|---------|
+| project_id  | int     |
+| employee_id | int     |
+
+(project_id, employee_id) is the primary key of this table. employee_id is a foreign key to Employee table. Each row of this table indicates that the employee with employee_id is working on the project with project_id.
+
+Table: Employee
+| Column Name      | Type    |
+|------------------|---------|
+| employee_id      | int     |
+| name             | varchar |
+| experience_years | int     |
+
+employee_id is the primary key of this table. It's guaranteed that experience_years is not NULL. Each row of this table contains information about one employee.  
+Write an SQL query that reports the average experience years of all the employees for each project, rounded to 2 digits.
+Return the result table in any order.
+```
+select project_id, round(avg(experience_years),2) as average_years
+from project p
+join employee e using(employee_id)
+group by project_id;
+```
+
+
+### 100174. Find Candidates for Data Scientist Position
+Table: Candidates
+| Column Name  | Type    | 
+|--------------|---------| 
+| candidate_id | int     | 
+| skill        | varchar |
+
+(candidate_id, skill) is the primary key (columns with unique values) for this table. Each row includes candidate_id and skill.  
+Write a query to find the candidates best suited for a Data Scientist position. The candidate must be proficient in Python, Tableau, and PostgreSQL.
+Return the result table ordered by candidate_id in ascending order.  
+```
+select candidate_id
+from candidates
+where skill in ("Python", "Tableau", "PostgreSQL")
+group by candidate_id
+having count(skill) >=3
+order by candidate_id;
+```
+### 176. Second Highest Salary
+Medium  
+Table: Employee
+| Column Name | Type |
+|-------------|------|
+| id          | int  |
+| salary      | int  |
+
+
+id is the primary key (column with unique values) for this table. Each row of this table contains information about the salary of an employee.
+Write a solution to find the second highest salary from the Employee table. If there is no second highest salary, return null (return None in Pandas).
+```
+select (select distinct salary
+from Employee
+order by salary desc
+limit 1
+offset 1) as SecondHighestSalary
+;
+```
+### 178. Rank Scores
+Medium  
+Table: Scores
+| Column Name | Type    |
+|-------------|---------|
+| id          | int     |
+| score       | decimal |
+
+id is the primary key (column with unique values) for this table. Each row of this table contains the score of a game. Score is a floating point value with two decimal places.
+Write a solution to find the rank of the scores. The ranking should be calculated according to the following rules:  
+The scores should be ranked from the highest to the lowest.
+* If there is a tie between two scores, both should have the same ranking.
+* After a tie, the next ranking number should be the next consecutive integer value.
+* In other words, there should be no holes between ranks.
+Return the result table ordered by score in descending order.
+```
+Select score,
+DENSE_RANK() OVER(order by score desc) as 'rank' 
+from Scores;
+```
